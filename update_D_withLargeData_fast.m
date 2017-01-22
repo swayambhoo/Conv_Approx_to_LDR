@@ -2,7 +2,8 @@ function [ D ] = update_D_withLargeData_fast(A, C, X, rho, D_ini)
 % This funtions solves 
 % arg min_{D} 0.5*|| AX - DCX ||_F^2 + rho*|| D ||_{2,1} 
 % by transforming it to a transpose form as 
-% arg min_{D} 0.5*|| X'A' - X'C'D||_F^2 + rho*|| D' ||_{1,2} 
+% arg min_{D} 0.5*|| X'A' - X'C'D||_F^2 + rho*|| D' ||_{1,2} and solves 
+% it via accelerated proximal gradient algorithm.
 % Final output is obtained by transposing the solution
 % of the above problem. 
 % Input:

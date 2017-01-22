@@ -1,4 +1,4 @@
-function [c, D] = update_CD_withdata_new(A, data, iFdata, Dint, Rt, rho, mu, iter_max, epsilon)
+function [c, D] = update_CD_withdata_new(A, data, Dint, rho, mu, iter_max, epsilon)
 % This function solves the following problem:
 % min_{D,C} 0.5*||AX - DCX||_F^2 + mu || C ||_F^2 + rho || D ||_{2,1}
 % using alternating minimization. Here D is the post-processing matrix 
@@ -7,13 +7,11 @@ function [c, D] = update_CD_withdata_new(A, data, iFdata, Dint, Rt, rho, mu, ite
 % Input: 
 %   1) A -- LDR matrix.
 %   2) data -- Data matrix with data along its columns. 
-%   3) iFdata -- Inverse Fourier transform of data matrix. 
-%   4) Dint -- Initial value of D.
-%   5) Rt  -- Transpose of right rotation matrix 'R' in paper. 
-%   6) rho  -- Regularization parameter for D.   
+%   3) Dint -- Initial value of D. 
+%   4) rho  -- Regularization parameter for D.   
 %   5) mu   -- Regularization parameter for C.   
-%   7) iter_max -- Maximum number of iterations.
-%   8) epsilon -- parameter for convergence.
+%   6) iter_max -- Maximum number of iterations.
+%   7) epsilon -- parameter for convergence.
 % Output: 
 %   1) c -- First row of the circulant matrix.
 %   2) D -- The post processing matrix.
@@ -27,12 +25,12 @@ function [c, D] = update_CD_withdata_new(A, data, iFdata, Dint, Rt, rho, mu, ite
     C_p = zeros(n,n);
     D_p = zeros(m,n);
     
-       idxMtx = reshape(1:n^2,n,n);
-       idx = 1:n;
+   idxMtx = reshape(1:n^2,n,n);
+   idx = 1:n;
 
-       for i = 1:n
-          idxMtx(:,i) = R^(i-1)*idxMtx(:,i); 
-       end
+   for i = 1:n
+      idxMtx(:,i) = R^(i-1)*idxMtx(:,i); 
+   end
 
     AX = A*data;
     
