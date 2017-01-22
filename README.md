@@ -15,6 +15,6 @@ This repository constains MATLAB based implementation of various optimization pr
 * speed_comparison_code -- Folder containing code for comparing speeds via multiplication by A and its circulant approximation. 
 
 ## Citation
-Please the cite the following work if you use this work. 
+Please the cite the following if you use this work. 
 * S. Jain and J. Haupt, ‘‘Convolutional approximations to linear dimensionality reduction operators,’’ Proceedings of International Conference on Acoustics, Speech and Signal Processing, March 2017.
 
