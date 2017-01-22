@@ -1,4 +1,6 @@
 ## Convolutional approximations to linear dimensionality reduction operators
+![GUI](main_img.png "Main Picture")
+
 
 This work examines the existence of efficiently implementable approximations of a general real linear dimensionality reduction (LDR) 
 operator. The specific focus is on approximating a given LDR operator with a partial circulant structured matrix (a matrix whose rows are related by circular shifts) as these constructions allow for low-memory footprint and computationally efficient implementations.
