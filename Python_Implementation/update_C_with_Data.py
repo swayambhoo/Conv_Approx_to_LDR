@@ -8,8 +8,11 @@ Created on Thu Feb 16 11:28:08 2017
 
 import numpy as np
 from scipy.linalg import circulant
+from multCirculant import multCirculantFFT
+from numpy.fft import fft, ifft
 
-def update_C_with_Data_fastest(AX, D, X, idxMtx, mu, c_ini, C_ini) :
+
+def update_C_with_Data_fastest(AX, D, X, idxMtx, mu, c_ini):
     """
    This funtions solves 
         arg min_{C} 0.5*|| AX - DCX ||_F^2 + mu||  C ||_F^2
@@ -33,24 +36,58 @@ def update_C_with_Data_fastest(AX, D, X, idxMtx, mu, c_ini, C_ini) :
     
     # initialization
     c_t = c_ini
-    ctm1 = np.zeros((1,n))    
+    ctm1 = np.zeros(n)    
     i = 0
     
     # convergence flag
     converged_Flag = True 
     
     DtAXXt = np.dot(np.dot(D.T,AX),X.T)   # D'AXX'
+    I = np.eye(n)
 
-    
-    
     while converged_Flag:
         
         dum = ct + (i/(3+i))*(ct - ctm1)    
-        Ct = circulant(ct)
-        
-        grad = np.dot(D.T, np.dot( np.dot( np.dot(D, Ct), X ), X.T )) - DtAXXt
+        grad = np.dot(D.T, np.dot( np.dot( np.dot(D, multCirculantFFT(ct, X) ), X.T )) - DtAXXt
         ctm1 = ct
-        Ct = (1-2*step*mu)*Ct - step*grad
+        ct = circProj((1-2*step*mu)*multCirculantFFT(ct,I) - step*grad)  # gradient step
+        # Projection onto circulant set.
+              
+              
+def circProj(X):
+    """
+    This function returns the first of the circulant matrix nearest to the 
+    given n x n matrix X in the following sense: 
+        min_{C is circulant} || C - X ||_F^2
+    Input:  'X' -- The nxn matrix.
+    Output: 'c' -- the first row of C.        
+    """        
         
+    n = X.shape[0]
+    c = np.zeros(n)
+    idx_c = np.arange(n)
+    for i in np.arange(n):
+       # c[i] =  np.choose( (idx_c + i)%n , X.T).sum()/n     
+       c[i] = X[ idx_c, (idx_c + i)%n ].sum()/n
         
-        i = i + 1
+    return c
+
+def circProjFFT_implementation(X, Idx):
+    """
+    This function returns the first of the circulant matrix nearest to the 
+    given n x n matrix X in the following sense: 
+        min_{C is circulant} || C - X ||_F^2 
+    Above problem is converted to equivalent problem over the diagonal of C
+         min_{c is vector} || diag(IIFT(c)) - X ||_F^2
+    Input:  'X' -- The nxn matrix.
+    Output: 'c' -- the first row of C.        
+    """        
+        
+    n = X.shape[0]
+    c = np.zeros(n)
+    idx_c = np.arange(n)
+    for i in np.arange(n):
+       # c[i] =  np.choose( (idx_c + i)%n , X.T).sum()/n     
+       c[i] = X[ idx_c, (idx_c + i)%n ].sum()/n
+        
+    return c

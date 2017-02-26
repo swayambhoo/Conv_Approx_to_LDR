@@ -7,7 +7,7 @@ Created on Thu Feb 16 14:05:16 2017
 """
 
 import numpy as np
-from numpy.fft import fft , ifft
+from numpy.fft import fft, ifft
 
 def multCirulantMatVec(C,X):
     """
@@ -21,15 +21,19 @@ def multCirulantMatVec(C,X):
     return np.dot(C,X)
 
 
-def multCirculantFFT(c, X):
+def multCirculantFFT(cr, X):
     """ This function multiplies circulant matrix via FFT based implementation.
         Inputs:
-            1) 'c' is the first column of the circulant matrix in flattened format
+            1) 'c' is the row column of the circulant matrix in flattened format
             2) 'X' is the data matrix with data points as its columns in 2d nparray format
         Output: 
             Multiple of circulant matrix and data vector in flattended format
     """
-    return   ifft( (fft(c)*fft(X,axis=0).T).T, axis=0 ) 
+    
+    # create first column from first row
+    cc = np.hstack( (cr[0],cr[:0:-1]) ) 
+    
+    return   ifft( (fft(cc)*fft(X,axis=0).T ).T, axis=0 ) 
     
     
     

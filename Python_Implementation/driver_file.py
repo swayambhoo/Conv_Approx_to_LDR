@@ -34,9 +34,10 @@ for i in np.arange(nTrials):
     t1 = t1 + (time.time() - t)
     
     t = time.time()
-    Cx2 = multCirculantFFT(cc, x)
+    Cx2 = multCirculantFFT(cr, x)
     t2 = t2 + (time.time()-t) 
     error = error + np.linalg.norm(Cx1 - Cx2)
+    
     
 t1 = t1/nTrials
 t2 = t2/nTrials
